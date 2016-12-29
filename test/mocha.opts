@@ -1,0 +1,6 @@
+--reporter spec
+--ui bdd
+--compilers js:babel-core/register
+--colors
+--timeout 15000
+test/**/*.test.js
