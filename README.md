@@ -1,4 +1,6 @@
-# Logger
+# node-logger
+
+[![Build Status](https://travis-ci.org/Dalee/node-logger.svg?branch=master)](https://travis-ci.org/Dalee/node-logger)
 
 * Console
 * Syslog (udp4)
