@@ -5,7 +5,7 @@ import os from 'os';
 import Console from '../../../src/adapter/console';
 import {SEVERITY_CODE, FACILITY_CODE} from '../../../src/constants';
 
-describe('console', () => {
+describe('Console', () => {
 
     it('should write correct message to console', sinon.test(function () {
         const console = new Console();

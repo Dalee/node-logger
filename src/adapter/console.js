@@ -3,41 +3,45 @@ import os from 'os';
 import {SEVERITY_NAME} from '../constants';
 
 /**
+ * Console adapter
  *
  */
 export default class Console {
 
     /**
      *
-     * @param options
+     * @param {Object} options
+     * @constructor
      */
     constructor(options) {
-       this._options = options;
+        this._options = options || {enabled: true};
     }
 
     /**
      *
-     * @param facility
-     * @param severity
-     * @param hostname
-     * @param application
-     * @param date
-     * @param message
+     * @param {number} facility
+     * @param {number} severity
+     * @param {string} hostname
+     * @param {string} application
+     * @param {string} date
+     * @param {string} message
      */
     write(facility, severity, hostname, application, date, message) {
-        const output = this._fmt(facility, severity, hostname, application, date, message);
-        this._write(output);
+        if (this._options.enabled) {
+            const output = this._fmt(facility, severity, hostname, application, date, message);
+            this._write(output);
+        }
     }
 
     /**
-     * TODO: add color support
      *
-     * @param facility
-     * @param severity
-     * @param hostname
-     * @param application
-     * @param date
-     * @param message
+     *
+     * @param {number} facility
+     * @param {number} severity
+     * @param {string} hostname
+     * @param {string} application
+     * @param {string} date
+     * @param {string} message
      * @private
      */
     _fmt(facility, severity, hostname, application, date, message) {
@@ -47,7 +51,7 @@ export default class Console {
 
     /**
      *
-     * @param output
+     * @param {string} output
      * @private
      */
     _write(output) {

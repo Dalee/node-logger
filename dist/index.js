@@ -47,18 +47,11 @@ var _console = require('./adapter/console');
 
 var _console2 = _interopRequireDefault(_console);
 
+var _hapi = require('./plugin/hapi');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// add some additional exports from constants
-exports.Syslog = _syslog2.default;
-exports.Console = _console2.default;
-exports.FACILITY = _constants.FACILITY;
-exports.SEVERITY = _constants.SEVERITY;
-exports.FACILITY_CODE = _constants.FACILITY_CODE;
-exports.SEVERITY_CODE = _constants.SEVERITY_CODE;
-
 // some default parameters
-
 _moment2.default.locale('en');
 var _adapters = [];
 var _params = {
@@ -69,7 +62,7 @@ var _params = {
 };
 
 /**
- * Logger class
+ * Logger class, singleton
  *
  */
 
@@ -83,8 +76,9 @@ var Logger = function () {
 
 
         /**
+         * Set parameters
          *
-         * @param params
+         * @param {Object} params
          * @throws Error
          */
         value: function setParameters(params) {
@@ -147,8 +141,9 @@ var Logger = function () {
         }
 
         /**
+         * Get current parameters
          *
-         * @returns {{facility: number, severity: number, hostname: *, app: *}}
+         * @returns {Object}
          */
 
     }, {
@@ -158,7 +153,7 @@ var Logger = function () {
         }
 
         /**
-         *
+         * Clear all registered adapters
          */
 
     }, {
@@ -168,15 +163,30 @@ var Logger = function () {
         }
 
         /**
+         * Register new adapter
          *
-         * @param adapter
-         * @param options
+         * @param {Object} adapter
+         * @param {Object} options
          */
 
     }, {
         key: 'addAdapter',
         value: function addAdapter(adapter, options) {
             _adapters.push(new adapter(options));
+        }
+
+        /**
+         *
+         * @param {error} err
+         */
+
+    }, {
+        key: 'unhandledError',
+        value: function unhandledError(err) {
+            this.emerg(err);
+            setTimeout(function () {
+                process.exit(1);
+            }, 2000);
         }
 
         /**
@@ -307,8 +317,8 @@ var Logger = function () {
 
         /**
          *
-         * @param args
-         * @returns {*}
+         * @param {Array} args
+         * @returns {string}
          * @private
          */
 
@@ -320,8 +330,8 @@ var Logger = function () {
 
         /**
          *
-         * @param severity
-         * @param message
+         * @param {number} severity
+         * @param {string} message
          * @private
          */
 
@@ -363,4 +373,32 @@ var Logger = function () {
     return Logger;
 }();
 
+// add some additional exports from constants
+
+
 exports.default = Logger;
+exports.Syslog = _syslog2.default;
+exports.Console = _console2.default;
+exports.FACILITY = _constants.FACILITY;
+exports.SEVERITY = _constants.SEVERITY;
+exports.FACILITY_CODE = _constants.FACILITY_CODE;
+exports.SEVERITY_CODE = _constants.SEVERITY_CODE;
+
+// some registrations
+
+process.on('uncaughtException', function (err) {
+    return Logger.unhandledError(err);
+});
+process.on('unhandledRejection', function (err) {
+    return Logger.unhandledError(err);
+});
+
+// hapi plugin
+exports.register = function (server, options, next) {
+    (0, _hapi.setupLogger)(Logger, server, options);
+    next();
+};
+
+exports.register.attributes = {
+    pkg: require('../package.json')
+};

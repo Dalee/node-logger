@@ -3,22 +3,11 @@ import os from 'os';
 import util from 'util';
 import path from 'path';
 import validator from 'validator';
-import {FACILITY, SEVERITY, FACILITY_CODE, SEVERITY_CODE} from './constants';
 
+import {FACILITY, SEVERITY, FACILITY_CODE, SEVERITY_CODE} from './constants';
 import Syslog from './adapter/syslog';
 import Console from './adapter/console';
-
-// add some additional exports from constants
-export {
-    // classes
-    Syslog,
-    Console,
-    // help dictionaries
-    FACILITY,
-    SEVERITY,
-    FACILITY_CODE,
-    SEVERITY_CODE
-};
+import {setupLogger as setupHapiLogger} from './plugin/hapi';
 
 // some default parameters
 moment.locale('en');
@@ -31,14 +20,15 @@ let _params = {
 };
 
 /**
- * Logger class
+ * Logger class, singleton
  *
  */
 export default class Logger {
 
     /**
+     * Set parameters
      *
-     * @param params
+     * @param {Object} params
      * @throws Error
      */
     static setParameters(params) {
@@ -101,27 +91,40 @@ export default class Logger {
     }
 
     /**
+     * Get current parameters
      *
-     * @returns {{facility: number, severity: number, hostname: *, app: *}}
+     * @returns {Object}
      */
     static getParameters() {
         return _params;
     }
 
     /**
-     *
+     * Clear all registered adapters
      */
     static clearAdapters() {
         _adapters = [];
     }
 
     /**
+     * Register new adapter
      *
-     * @param adapter
-     * @param options
+     * @param {Object} adapter
+     * @param {Object} options
      */
     static addAdapter(adapter, options) {
         _adapters.push(new adapter(options));
+    }
+
+    /**
+     *
+     * @param {error} err
+     */
+    static unhandledError(err) {
+        this.emerg(err);
+        setTimeout(() => {
+            process.exit(1);
+        }, 2000);
     }
 
     /**
@@ -189,8 +192,8 @@ export default class Logger {
 
     /**
      *
-     * @param args
-     * @returns {*}
+     * @param {Array} args
+     * @returns {string}
      * @private
      */
     static _fmt(args) {
@@ -199,8 +202,8 @@ export default class Logger {
 
     /**
      *
-     * @param severity
-     * @param message
+     * @param {number} severity
+     * @param {string} message
      * @private
      */
     static _log(severity, message) {
@@ -215,3 +218,29 @@ export default class Logger {
         }
     }
 }
+
+// add some additional exports from constants
+export {
+    // classes
+    Syslog,
+    Console,
+    // help dictionaries
+    FACILITY,
+    SEVERITY,
+    FACILITY_CODE,
+    SEVERITY_CODE
+};
+
+// some registrations
+process.on('uncaughtException', (err) => Logger.unhandledError(err));
+process.on('unhandledRejection', (err) => Logger.unhandledError(err));
+
+// hapi plugin
+exports.register = (server, options, next) => {
+    setupHapiLogger(Logger, server, options);
+    next();
+};
+
+exports.register.attributes = {
+    pkg: require('../package.json')
+};

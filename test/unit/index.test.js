@@ -5,7 +5,7 @@ import Logger, {FACILITY_CODE, SEVERITY_CODE} from '../../src/index';
 /**
  * Tests Logger object itself
  */
-describe('logger', () => {
+describe('Logger', () => {
 
     it('should correctly log with severity level and message', sinon.test(function () {
         const messages = [];

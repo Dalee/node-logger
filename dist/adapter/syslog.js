@@ -31,6 +31,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  */
 var Syslog = function () {
+
+    /**
+     *
+     * @param {Object} options
+     */
     function Syslog(options) {
         (0, _classCallCheck3.default)(this, Syslog);
 
@@ -44,12 +49,12 @@ var Syslog = function () {
 
     /**
      *
-     * @param facility
-     * @param severity
-     * @param hostname
-     * @param application
-     * @param date
-     * @param message
+     * @param {number} facility
+     * @param {number} severity
+     * @param {string} hostname
+     * @param {string} application
+     * @param {string} date
+     * @param {string} message
      */
 
 
@@ -85,7 +90,7 @@ var Syslog = function () {
 
         /**
          * https://tools.ietf.org/html/rfc5424#section-6.4
-         * @param message
+         * @param {string} message
          */
 
     }, {
@@ -98,8 +103,8 @@ var Syslog = function () {
          * https://tools.ietf.org/html/rfc5424#section-6.2.1
          * (facility * 8) + severity
          *
-         * @param facility
-         * @param severity
+         * @param {number} facility
+         * @param {number} severity
          */
 
     }, {
@@ -110,7 +115,7 @@ var Syslog = function () {
 
         /**
          *
-         * @param output
+         * @param {string} output
          * @private
          */
 

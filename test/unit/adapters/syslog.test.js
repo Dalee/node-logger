@@ -6,7 +6,7 @@ import {SEVERITY_CODE, FACILITY_CODE} from '../../../src/constants';
 
 const syslog = new Syslog();
 
-describe('syslog', () => {
+describe('Syslog', () => {
 
     it('should correctly calculate priority', sinon.test(function () {
         let pri;

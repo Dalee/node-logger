@@ -8,6 +8,10 @@ import validator from 'validator';
  */
 export default class Syslog {
 
+    /**
+     *
+     * @param {Object} options
+     */
     constructor(options) {
         options = options || {};
         this._host = options.host || '127.0.0.1';
@@ -19,12 +23,12 @@ export default class Syslog {
 
     /**
      *
-     * @param facility
-     * @param severity
-     * @param hostname
-     * @param application
-     * @param date
-     * @param message
+     * @param {number} facility
+     * @param {number} severity
+     * @param {string} hostname
+     * @param {string} application
+     * @param {string} date
+     * @param {string} message
      */
     write(facility, severity, hostname, application, date, message) {
         const priority = this.calculatePri(facility, severity);
@@ -60,7 +64,7 @@ export default class Syslog {
 
     /**
      * https://tools.ietf.org/html/rfc5424#section-6.4
-     * @param message
+     * @param {string} message
      */
     cleanMessage(message) {
         return validator.stripLow(message, true);
@@ -70,8 +74,8 @@ export default class Syslog {
      * https://tools.ietf.org/html/rfc5424#section-6.2.1
      * (facility * 8) + severity
      *
-     * @param facility
-     * @param severity
+     * @param {number} facility
+     * @param {number} severity
      */
     calculatePri(facility, severity) {
         return (facility * 8 + severity);
@@ -79,7 +83,7 @@ export default class Syslog {
 
     /**
      *
-     * @param output
+     * @param {string} output
      * @private
      */
     _write(output) {
