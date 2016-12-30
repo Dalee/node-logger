@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
@@ -25,70 +25,74 @@ var _constants = require('../constants');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
+ * Console adapter
  *
  */
 var Console = function () {
 
-  /**
-   *
-   * @param options
-   */
-  function Console(options) {
-    (0, _classCallCheck3.default)(this, Console);
-
-    this._options = options;
-  }
-
-  /**
-   *
-   * @param facility
-   * @param severity
-   * @param hostname
-   * @param application
-   * @param date
-   * @param message
-   */
-
-
-  (0, _createClass3.default)(Console, [{
-    key: 'write',
-    value: function write(facility, severity, hostname, application, date, message) {
-      var output = this._fmt(facility, severity, hostname, application, date, message);
-      this._write(output);
-    }
-
     /**
-     * TODO: add color support
      *
-     * @param facility
-     * @param severity
-     * @param hostname
-     * @param application
-     * @param date
-     * @param message
-     * @private
+     * @param {Object} options
+     * @constructor
      */
+    function Console(options) {
+        (0, _classCallCheck3.default)(this, Console);
 
-  }, {
-    key: '_fmt',
-    value: function _fmt(facility, severity, hostname, application, date, message) {
-      var severityName = _constants.SEVERITY_NAME[severity];
-      return _util2.default.format("[%s] %s: %s%s", date, severityName, message, _os2.default.EOL);
+        this._options = options || { enabled: true };
     }
 
     /**
      *
-     * @param output
-     * @private
+     * @param {number} facility
+     * @param {number} severity
+     * @param {string} hostname
+     * @param {string} application
+     * @param {string} date
+     * @param {string} message
      */
 
-  }, {
-    key: '_write',
-    value: function _write(output) {
-      process.stdout.write(output);
-    }
-  }]);
-  return Console;
+
+    (0, _createClass3.default)(Console, [{
+        key: 'write',
+        value: function write(facility, severity, hostname, application, date, message) {
+            if (this._options.enabled) {
+                var output = this._fmt(facility, severity, hostname, application, date, message);
+                this._write(output);
+            }
+        }
+
+        /**
+         *
+         *
+         * @param {number} facility
+         * @param {number} severity
+         * @param {string} hostname
+         * @param {string} application
+         * @param {string} date
+         * @param {string} message
+         * @private
+         */
+
+    }, {
+        key: '_fmt',
+        value: function _fmt(facility, severity, hostname, application, date, message) {
+            var severityName = _constants.SEVERITY_NAME[severity];
+            return _util2.default.format("[%s] %s: %s%s", date, severityName, message, _os2.default.EOL);
+        }
+
+        /**
+         *
+         * @param {string} output
+         * @private
+         */
+
+    }, {
+        key: '_write',
+        value: function _write(output) {
+            process.stdout.write(output);
+        }
+    }]);
+    return Console;
 }();
 
 exports.default = Console;

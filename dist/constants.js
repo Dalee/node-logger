@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 /**
- *
+ * Dictionary of facilities
  *
  */
 var FACILITY = exports.FACILITY = {

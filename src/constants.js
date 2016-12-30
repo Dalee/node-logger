@@ -1,5 +1,5 @@
 /**
- *
+ * Dictionary of facilities
  *
  */
 export const FACILITY = {
