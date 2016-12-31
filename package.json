@@ -1,13 +1,23 @@
 {
-  "name": "logger",
-  "version": "1.0.0",
-  "description": "",
-  "author": "",
+  "name": "dalee-logger",
+  "version": "0.0.1",
+  "description": "Console and Syslog (udp4) logger for ELK / Docker stacks",
+  "author": "Dalee IA <dev@dalee.ru>",
+  "license": "MIT",
   "main": "dist/index.js",
   "scripts": {
     "test": "make test",
-    "coverage": "make coverage"
+    "coverage": "make coverage",
+    "build": "make build"
   },
+  "keywords": [
+    "logstash",
+    "logger",
+    "syslog"
+  ],
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/Dalee/node-logger.git"
@@ -15,7 +25,6 @@
   "engines": {
     "node": ">= 5.12.0"
   },
-  "license": "MIT",
   "dependencies": {
     "lodash": "^4.17.3",
     "moment": "^2.17.1",

@@ -1,0 +1,6 @@
+coverage
+.editorconfig
+.eslintrc.json
+.travis.yml
+Makefile
+test.js
