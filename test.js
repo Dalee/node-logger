@@ -1,5 +1,6 @@
 /**
  * Example code
+ *
  */
 import Logger, {Syslog, Console} from './src/index';
 
@@ -20,13 +21,10 @@ if (SYSLOG_HOST) {
 
 // if console is requested (or omitted) add console adapter
 if (CONSOLE_LOG) {
-    Logger.addAdapter(Console);
+    Logger.addAdapter(Console, {});
 }
 
 // make some calls
-Logger.debug("Hello world");
-Logger.info("Another log line");
+Logger.debug("Publishing log line with DEBUG severity");
+Logger.info("Publishing log line with INFO severity");
 Logger.emerg(new Error("This is sample error logged"));
-Logger.info("=================================");
-Logger.info("=================================");
-Logger.info("Previous exception trace was ok :)");
