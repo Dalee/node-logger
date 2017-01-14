@@ -1,5 +1,4 @@
 import util from 'util';
-import os from 'os';
 import {SEVERITY_NAME} from '../constants';
 
 /**
@@ -15,6 +14,9 @@ export default class Console {
      */
     constructor(options) {
         this._options = options || {enabled: true};
+        if (!this._options.hasOwnProperty('enabled')) {
+            this._options.enabled = true;
+        }
     }
 
     /**
@@ -25,8 +27,10 @@ export default class Console {
      * @param {string} application
      * @param {string} date
      * @param {string} message
+     *
+     * eslint-disable max-params
      */
-    write(facility, severity, hostname, application, date, message) {
+    write(facility, severity, hostname, application, date, message) { // eslint-disable-line max-params
         if (this._options.enabled) {
             const output = this._fmt(facility, severity, hostname, application, date, message);
             this._write(output);
@@ -44,9 +48,9 @@ export default class Console {
      * @param {string} message
      * @private
      */
-    _fmt(facility, severity, hostname, application, date, message) {
+    _fmt(facility, severity, hostname, application, date, message) { // eslint-disable-line max-params
         const severityName = SEVERITY_NAME[severity];
-        return util.format("[%s] %s: %s%s", date, severityName, message, os.EOL);
+        return util.format("[%s] %s: %s", date, severityName, message);
     }
 
     /**
@@ -55,6 +59,6 @@ export default class Console {
      * @private
      */
     _write(output) {
-        process.stdout.write(output);
+        console.log(output); // eslint-disable-line no-console
     }
 };

@@ -1,6 +1,6 @@
 {
   "name": "dalee-logger",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "Console and Syslog (udp4) logger for ELK / Docker stacks",
   "author": "Dalee IA <dev@dalee.ru>",
   "license": "MIT",
@@ -8,12 +8,15 @@
   "scripts": {
     "test": "make test",
     "coverage": "make coverage",
-    "build": "make build"
+    "build": "make build",
+    "prepublish": "npm run build"
   },
   "keywords": [
     "logstash",
     "logger",
-    "syslog"
+    "syslog",
+    "hapi-logger",
+    "express-logger"
   ],
   "files": [
     "dist"
@@ -26,6 +29,7 @@
     "node": ">= 5.12.0"
   },
   "dependencies": {
+    "babel-runtime": "^6.20.0",
     "lodash": "^4.17.3",
     "moment": "^2.17.1",
     "validator": "^6.2.0"
@@ -53,7 +57,9 @@
   },
   "babel": {
     "presets": [
-      "es2015"
+      "es2015",
+      "es2016",
+      "es2017"
     ],
     "plugins": [
       "add-module-exports",

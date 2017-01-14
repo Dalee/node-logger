@@ -30,7 +30,7 @@ export default class Syslog {
      * @param {string} date
      * @param {string} message
      */
-    write(facility, severity, hostname, application, date, message) {
+    write(facility, severity, hostname, application, date, message) { // eslint-disable-line max-params
         const priority = this.calculatePri(facility, severity);
         const msg = this.cleanMessage(message);
         const parts = [];

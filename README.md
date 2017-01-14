@@ -10,7 +10,7 @@ Highlights:
 * Syslog udp4 writer (Syslog/Logstash compatible)
 * `uncaughtException` and `unhandledRejection` handling (process will exit)
 * `hapi.js` plugin
-* `express.js` plugin
+* `express.js` plugin (WIP)
 
 ## Usage
 

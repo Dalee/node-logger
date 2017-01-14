@@ -1,6 +1,5 @@
 import sinon from 'sinon';
 import assert from 'assert';
-import os from 'os';
 
 import Console from '../../../src/adapter/console';
 import {SEVERITY_CODE, FACILITY_CODE} from '../../../src/constants';
@@ -25,7 +24,7 @@ describe('Console', () => {
         );
 
         assert.equal(messages.length, 1);
-        assert.equal(messages[0], "[2016-11-26 13:52:45.2342] debug: Hello world" + os.EOL);
+        assert.equal(messages[0], "[2016-11-26 13:52:45.2342] debug: Hello world");
     }));
 
 });

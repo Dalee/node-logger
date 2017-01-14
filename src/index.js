@@ -23,7 +23,7 @@ let _params = {
  * Logger class, singleton
  *
  */
-export default class Logger {
+class Logger {
 
     /**
      * Set parameters
@@ -106,10 +106,14 @@ export default class Logger {
         _adapters = [];
     }
 
+    static getAdapters() {
+        return _adapters;
+    }
+
     /**
      * Register new adapter
      *
-     * @param {Object} adapter
+     * @param {Function} adapter
      * @param {Object} options
      */
     static addAdapter(adapter, options) {
@@ -219,21 +223,17 @@ export default class Logger {
     }
 }
 
-// add some additional exports from constants
-export {
-    // classes
-    Syslog,
-    Console,
-    // help dictionaries
-    FACILITY,
-    SEVERITY,
-    FACILITY_CODE,
-    SEVERITY_CODE
-};
-
-// some registrations
+// global registrations
 process.on('uncaughtException', (err) => Logger.unhandledError(err));
 process.on('unhandledRejection', (err) => Logger.unhandledError(err));
+
+module.exports = exports = Logger;
+exports.Syslog = Syslog;
+exports.Console = Console;
+exports.FACILITY = FACILITY;
+exports.FACILITY_CODE = FACILITY_CODE;
+exports.SEVERITY = SEVERITY;
+exports.SEVERITY_CODE = SEVERITY_CODE;
 
 // hapi plugin
 exports.register = (server, options, next) => {
