@@ -58,12 +58,21 @@ work-in-progress
 
 ## Logstash configuration
 
-Sample filter for Logstash
+Sample filter for Logstash:
 
+ * logstash will listen on port `5000` for udp packets
  * successfully parsed message will go into index named `logstash-{syslog_program}`
  * every unparsed line will go to index named `logstash-error`
+ * logstash will write to Elastic on `localhost:9200`
 
 ```
+input {
+    udp {
+        port => 5000
+        type => syslog
+    }
+}
+
 filter {
     grok {
       match => { "message" => "<%{POSINT:syslog_pri}>%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
@@ -86,6 +95,19 @@ filter {
         mutate {
             add_field => [ "index_type", "error" ]
         }
+    }
+}
+
+output {
+    elasticsearch {
+        # flush_size = 1 set only for debugging purposes, should be > 1 on production
+        flush_size => 1
+        hosts => ["localhost:9200"]
+        index => "logstash-%{index_type}"
+    }
+    stdout {
+        # this should be disabled in production environment
+        codec => rubydebug
     }
 }
 ```
