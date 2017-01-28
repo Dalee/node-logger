@@ -136,11 +136,11 @@ export class HapiPlugin {
      *
      * @param {Request} request
      * @param {Object} event
-     * @param {Array} tags
+     * @param {Object} tags
      */
     onRequestInternal(request, event, tags) {
         // new request just received
-        if (tags['received']) {
+        if (tags.received) {
             const method = request.method.toUpperCase();
             const proto = (request.headers['x-forwarded-proto'] || request.connection.info.protocol);
             const url = `${proto}://${request.info.host}${request.url.path}`;
