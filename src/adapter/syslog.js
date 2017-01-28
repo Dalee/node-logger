@@ -17,8 +17,20 @@ export default class Syslog {
         this._host = options.host || '127.0.0.1';
         this._port = parseInt(options.port, 10) || 514;
 
+        this.initSocket();
+    }
+
+    /**
+     * Initialize server socket, catch error event re-create client socket.
+     */
+    initSocket() {
         this._sender = dgram.createSocket('udp4');
         this._sender.unref();
+
+        this._sender.on('error', () => {
+            this._sender = null;
+            this.initSocket();
+        });
     }
 
     /**
