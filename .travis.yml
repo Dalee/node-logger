@@ -11,14 +11,3 @@ script:
 
 before_deploy:
   - make build
-
-notifications:
-  slack: dalee:URO6M9J02if0wyOxB0kV5geu
-
-deploy:
-  skip_cleanup: true
-  email: topdev@dalee.ru
-  provider: npm
-  api_key: "LiSpuUF8zqLFz6IiuYKxnEjcBN6sPv9irAAlJl/Xdy+7dhr3Gz2dliRrg2q/GtI+u3TqoFSxtFhErtuYuxwXq4DMYwF/wHvV3ej9gbjYifBjOrg94WUaDr6YYQIB3C4/jCeRbwUCZRU49O/ILXKfiXnvHiOdE0LTLXCxQYRcmvR5fbpd6aedK2IqmAtEtWodhu769Ffe+aefJRbyywhDsRtyXgIhIU1J0o5S/ijHeAIfZOinJrjr3ZWIMC5KsIMR4jbrIK4woRV/jkm67bytjTYrEvM+MDK9rnCV8NpDwxau3MTgMjmkWNlm/b91qyVebJoZtqsbg2/YG5X18+a0Dv2ygp9Mj0On+hhpvjwweVTYi4Wb0kNUHtSKoF5nKv4LZUGEB3VipKsPp/Qr+QutPnYj/uiObkO2JbozrZEayHcMdSFQ7tCag6hBH5UJNlqf2dK4IQtS/7L76Qs9BQn52OMLK6iBrGPQlnDcWD1NV0/ocGBILLsuDqstoTL+tu1oZt0EeUtL8IPypZFGlKEbwws5Ink4QKEHYOvOQxh3h49Tu+mzNke49FCJPb8ds2dxvbm7tetJK9pfwKlPS9GKlhPGS3iwI/04XsFz8KAwIKk89CX3yseGc/85lm2AMnpEgUmRE1ZLGo1v8t/6V3XNDOtTKYe3/Y+7BcIc6uHzZg0="
-  on:
-    tags: true
