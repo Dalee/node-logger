@@ -8,7 +8,7 @@ function getPluginInstance() {
         'loggerFunc': function (...args) {
             this.messageList.push(args);
         },
-        'emerg': (...args) => {
+        'emerg': function (...args) {
             this.loggerFunc(...args)
         },
         'alert': function (...args) {
@@ -42,71 +42,6 @@ function getPluginInstance() {
 
 
 describe('HapiPlugin', () => {
-
-    it('should get correct severity level from hapi tags (array)', () => {
-        const hapiPlugin = getPluginInstance();
-
-        assert.equal(hapiPlugin._severityFromTags('debug', ['error']), 'error');
-        assert.equal(hapiPlugin._severityFromTags('debug', ['database-error']), 'debug');
-    });
-
-    it('should get correct severity level from hapi tags (object)', () => {
-        const hapiPlugin = getPluginInstance();
-
-        assert.equal(hapiPlugin._severityFromTags('debug', {'error': true}), 'error');
-        assert.equal(hapiPlugin._severityFromTags('debug', {'database-error': true}), 'debug');
-    });
-
-    it('should correctly format tags for logging (array)', () => {
-        const hapiPlugin = getPluginInstance();
-
-        assert.equal(hapiPlugin._formatTags('debug', ['error']), '[error]');
-        assert.equal(hapiPlugin._formatTags('error', ['error']), '');
-        assert.equal(hapiPlugin._formatTags('error', ['error', 'database-error']), '[database-error]');
-        assert.equal(hapiPlugin._formatTags('debug', ['error', 'database-error']), '[error, database-error]');
-    });
-
-    it('should correctly format tags for logging (object)', () => {
-        const hapiPlugin = getPluginInstance();
-
-        assert.equal(hapiPlugin._formatTags('debug', {error: true}), '[error]');
-        assert.equal(hapiPlugin._formatTags('error', {error: true}), '');
-        assert.equal(
-            hapiPlugin._formatTags('error', {'error': true, 'database-error': true}),
-            '[database-error]'
-        );
-
-        assert.equal(
-            hapiPlugin._formatTags('debug', {'error': true, 'database-error': true}),
-            '[error, database-error]'
-        );
-    });
-
-    it('should correctly format data for logging (no error)', () => {
-        const hapiPlugin = getPluginInstance();
-
-        assert.equal(
-            hapiPlugin._formatData('debug', {}, ['database-error']),
-            '[database-error] '
-        );
-
-        assert.equal(
-            hapiPlugin._formatData('debug', {data: 'hello'}, ['error', 'database-error']),
-            '[error, database-error] hello'
-        );
-    });
-
-    it('should correctly format data for logging (error)', () => {
-        const hapiPlugin = getPluginInstance();
-        const err = new Error('hello');
-        let result;
-
-        result = hapiPlugin._formatData('error', {data: err}, []);
-        assert.equal(result.substring(0, 12), 'Error: hello');
-
-        result = hapiPlugin._formatData('error', {data: err}, ['database-error']);
-        assert.equal(result.substring(0, 29), '[database-error] Error: hello');
-    });
 
     it('onServerStart', () => {
         const hapiPlugin = getPluginInstance();

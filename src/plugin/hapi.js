@@ -1,11 +1,6 @@
+import {processLogData} from '../helpers';
 import Syslog from '../adapter/syslog';
 import Console from '../adapter/console';
-
-import {SEVERITY_NAME} from '../constants';
-import _ from 'lodash';
-import util from 'util';
-
-const severityMethods = Object.values(SEVERITY_NAME);
 
 /**
  *
@@ -106,9 +101,8 @@ export class HapiPlugin {
      * @param {Array} tags
      */
     onServerLog(server, event, tags) {
-        const severity = this._severityFromTags('debug', tags);
-        const data = this._formatData(severity, event, tags);
-        this._logger[severity](data);
+        const {severity, message} = processLogData(event.data, tags);
+        this._logger[severity](message);
     }
 
     /**
@@ -118,9 +112,8 @@ export class HapiPlugin {
      * @param {Array} tags
      */
     onRequestLog(request, event, tags) {
-        const severity = this._severityFromTags('debug', tags);
-        const data = this._formatData(severity, event, tags);
-        this._logger[severity](data);
+        const {severity, message} = processLogData(event.data, tags);
+        this._logger[severity](message);
     }
 
     /**
@@ -148,71 +141,5 @@ export class HapiPlugin {
         }
     }
 
-    /**
-     *
-     * @param {string} severity
-     * @param {Object} event
-     * @param {Array} tags
-     * @returns {string}
-     * @private
-     */
-    _formatData(severity, event, tags) {
-        const tagsPayload = this._formatTags(severity, tags);
 
-        let data = [];
-        if (tagsPayload.length > 0) {
-            data.push(tagsPayload);
-        }
-
-        // format data correctly, include stack to result
-        switch (true) {
-            case (event.data instanceof Error):
-                data.push(event.data.stack);
-                break;
-
-            default:
-                data.push(event.data);
-        }
-
-        return data.join(' ');
-    }
-
-    /**
-     *
-     * @param {string} defaultLevel
-     * @param {Array} tags
-     */
-    _severityFromTags(defaultLevel, tags) {
-        let tagList = tags;
-        if ((tagList instanceof Array) === false) {
-            tagList = Object.keys(tagList);
-        }
-
-        const result = _.find(tagList, (key) => {
-            return (severityMethods.indexOf(key) >= 0);
-        });
-
-        return result || defaultLevel;
-    }
-
-    /**
-     *
-     * @param {string} severity
-     * @param {Array} tags
-     * @private
-     */
-    _formatTags(severity, tags) {
-        let tagList = tags;
-        if ((tagList instanceof Array) === false) {
-            tagList = Object.keys(tagList);
-        }
-
-        tagList = _.filter(tagList, (key) => {
-            return key !== severity;
-        });
-
-        return (tagList.length > 0)
-            ? util.format('[%s]', tagList.join(', '))
-            : '';
-    }
 }
