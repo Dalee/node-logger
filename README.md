@@ -48,13 +48,44 @@ plugin: {
       host: 'example.com',
       port: 514
     }
+  }
 }
 ```
 
 ### express.js
 
-work-in-progress
+Version supported: `^4.0.0`
 
+```
+import express from 'express';
+import {express as expressLogger} from 'dalee-logger';
+
+const app = express();
+const logger = expressLogger({
+  app: 'node-daemon',
+  hostname: 'example.com',
+  console: {
+    enabled: true
+  },
+  syslog: {
+    host: 'example.com',
+    port: 514
+  }
+});
+
+app.use(logger);
+
+app.get('/', function(req,res) {
+    req.log('notice', 'The next message will be error');
+    undefined.error = 'Force error';
+});
+
+app.use(logger.errorLogger);
+
+app.listen(80, () => {
+    logger.log('debug', 'server started');
+});
+```
 
 ## Logstash configuration
 
