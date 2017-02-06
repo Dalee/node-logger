@@ -8,6 +8,7 @@ import {FACILITY, SEVERITY, FACILITY_CODE, SEVERITY_CODE} from './constants';
 import Syslog from './adapter/syslog';
 import Console from './adapter/console';
 import {setupLogger as setupHapiLogger} from './plugin/hapi';
+import setupExpress from './plugin/express';
 
 // some default parameters
 moment.locale('en');
@@ -201,7 +202,7 @@ class Logger {
      * @private
      */
     static _fmt(args) {
-        return util.format.apply(this, args);
+        return util.format(...args);
     }
 
     /**
@@ -243,4 +244,8 @@ exports.register = (server, options, next) => {
 
 exports.register.attributes = {
     pkg: require('../package.json')
+};
+
+exports.express = (options) => {
+    return setupExpress(Logger, options);
 };
