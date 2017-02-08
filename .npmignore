@@ -3,4 +3,4 @@ coverage
 .eslintrc.json
 .travis.yml
 Makefile
-test.js
+examples

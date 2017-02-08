@@ -2,7 +2,7 @@
  * Example code
  *
  */
-import Logger, {Syslog, Console} from './src/index';
+import Logger, {Syslog, Console} from './../src/index';
 
 // defined some constants
 const SYSLOG_HOST = process.env.SYSLOG_HOST;
@@ -25,6 +25,6 @@ if (CONSOLE_LOG) {
 }
 
 // make some calls
-Logger.debug("Publishing log line with DEBUG severity");
-Logger.info("Publishing log line with INFO severity");
-Logger.emerg(new Error("This is sample error logged"));
+Logger.debug('Publishing log line with DEBUG severity');
+Logger.info('Publishing log line with INFO severity');
+Logger.emerg(new Error('This is sample error logged'));
