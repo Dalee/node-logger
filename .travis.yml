@@ -11,5 +11,5 @@ install:
   - npm install
 
 script:
-  - make coverage
+  - make test-coverage
   - codecov -f coverage/coverage.json
