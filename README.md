@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Dalee/node-logger.svg?branch=master)](https://travis-ci.org/Dalee/node-logger)
 [![codecov](https://codecov.io/gh/Dalee/node-logger/branch/master/graph/badge.svg)](https://codecov.io/gh/Dalee/node-logger)
-[![Dependencies](https://david-dm.org/Dalee/node-logger.svg)](https://david-dm.org/)
+[![Dependencies](https://david-dm.org/Dalee/node-logger.svg)](https://david-dm.org/Dalee/node-logger)
 
 
 Currently work-in-progress.
