@@ -1,6 +1,8 @@
 # dalee-logger
 
 [![Build Status](https://travis-ci.org/Dalee/node-logger.svg?branch=master)](https://travis-ci.org/Dalee/node-logger)
+[![codecov](https://codecov.io/gh/Dalee/node-logger/branch/master/graph/badge.svg)](https://codecov.io/gh/Dalee/node-logger)
+
 
 Currently work-in-progress.
 
@@ -95,6 +97,7 @@ Sample filter for Logstash:
  * successfully parsed message will go into index named `logstash-{syslog_program}`
  * every unparsed line will go to index named `logstash-error`
  * logstash will write to Elastic on `localhost:9200`
+ * Check out [ELK-playground](https://github.com/Dalee/elk-playground) to test with
 
 ```
 input {
