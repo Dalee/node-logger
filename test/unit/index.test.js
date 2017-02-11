@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import assert from 'assert';
-import Logger, {FACILITY_CODE, SEVERITY_CODE} from '../../src/index';
+import Logger, {FACILITY_CODE, SEVERITY_CODE, SEVERITY_NAME} from '../../src/index';
 
 /**
  * Tests Logger object itself
@@ -43,6 +43,46 @@ describe('Logger', () => {
         assert.equal(messages[6][1], SEVERITY_CODE.NOTICE);
         assert.equal(messages[7][1], SEVERITY_CODE.INFO);
         assert.equal(messages[8][1], SEVERITY_CODE.DEBUG);
+    }));
+
+    it('should correctly filter events with defined level', sinon.test(function () {
+        const messages = [];
+        let adapters;
+
+        // dummy adapter test implementation
+        class DummyAdapter {
+            write(facility, severity, hostname, application, date, message) { // eslint-disable-line max-params
+                messages.push([severity, message]);
+            }
+        }
+
+        Logger.setParameters({'logger_level': 'warning'});
+        Logger.addAdapter(DummyAdapter, {});
+
+        adapters = Logger.getAdapters();
+        assert.equal(adapters.length, 1);
+
+        // write some events
+        Logger.log('DEBUG level should not be logged');
+        Logger.info('INFO level should not be logged');
+        Logger.notice('NOTICE should not be logged');
+        Logger.warning('WARNING level should be logged');
+        Logger.error('ERROR level should be logged');
+        Logger.critical('CRITICAL level should be logged');
+        Logger.alert('ALERT level should be logged');
+        Logger.emerg('EMERG level should be logged');
+
+        // check events filtered
+        assert.equal(messages.length, 5);
+        assert.equal(messages[0][1], 'WARNING level should be logged');
+        assert.equal(messages[1][1], 'ERROR level should be logged');
+        assert.equal(messages[2][1], 'CRITICAL level should be logged');
+        assert.equal(messages[3][1], 'ALERT level should be logged');
+        assert.equal(messages[4][1], 'EMERG level should be logged');
+
+        Logger.clearAdapters();
+        adapters = Logger.getAdapters();
+        assert.equal(adapters.length, 0);
     }));
 
     it('should correctly concatenate all arguments (strings)', sinon.test(function () {
@@ -123,7 +163,7 @@ describe('Logger', () => {
 
         assert.throws(function () {
             Logger.setParameters({'facility': 'Hello'});
-        })
+        });
     }));
 
     it('should correctly set severity', sinon.test(function () {
@@ -213,6 +253,44 @@ describe('Logger', () => {
                 "aaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
             Logger.setParameters({'app': superLongLine});
+        })
+    }));
+
+    it('should accept only correct logger level', sinon.test(function () {
+        assert.doesNotThrow(function () {
+            Logger.setParameters({'logger_level': SEVERITY_NAME[SEVERITY_CODE.DEBUG]});
+
+            const params = Logger.getParameters();
+            assert.equal(params.logger_level, SEVERITY_NAME[SEVERITY_CODE.DEBUG]);
+        });
+
+        assert.doesNotThrow(function () {
+            Logger.setParameters({'logger_level': SEVERITY_NAME[SEVERITY_CODE.EMERGENCY]});
+
+            const params = Logger.getParameters();
+            assert.equal(params.logger_level, SEVERITY_NAME[SEVERITY_CODE.EMERGENCY]);
+        });
+
+        assert.doesNotThrow(function () {
+            Logger.setParameters({'logger_level': 'EMERG'});
+
+            const params = Logger.getParameters();
+            assert.equal(params.logger_level, SEVERITY_NAME[SEVERITY_CODE.EMERGENCY]);
+        });
+
+        assert.doesNotThrow(function () {
+            Logger.setParameters({'logger_level': 'emerg'});
+
+            const params = Logger.getParameters();
+            assert.equal(params.logger_level, SEVERITY_NAME[SEVERITY_CODE.EMERGENCY]);
+        });
+
+        assert.throws(function () {
+            Logger.setParameters({'logger_level': 'example'});
+        });
+
+        assert.throws(function () {
+            Logger.setParameters({'logger_level': 'Hello'});
         })
     }));
 });

@@ -4,25 +4,61 @@
 [![codecov](https://codecov.io/gh/Dalee/node-logger/branch/master/graph/badge.svg)](https://codecov.io/gh/Dalee/node-logger)
 [![Dependencies](https://david-dm.org/Dalee/node-logger.svg)](https://david-dm.org/Dalee/node-logger)
 
+Great for Docker/Kubernetes environments.
 
-Currently work-in-progress.
+ > Currently in production testing phase.
 
-Highlights:
+Key features:
 
-* Console writer
-* Syslog udp4 writer (Syslog/Logstash compatible)
-* `uncaughtException` and `unhandledRejection` handling (process will exit)
-* `hapi.js` plugin
-* `express.js` plugin (WIP)
+ * Minimal configuration
+ * Framework support integrated
+   * [hapi.js](https://hapijs.com/)
+   * [express.js](http://expressjs.com/)
+ * Console writer (enabled by default)
+ * Syslog udp4 writer (Syslog/Logstash compatible)
+ * `uncaughtException` and `unhandledRejection` handling (process will exit)
 
 ## Usage
 
 `npm i dalee-logger --save`
 
+### Configuration
+
+Global configuration options:
+
+ * `facility` - global facility, default value: `1` (`USER`) 
+ * `severity` - default severity for events logged with `log` method, default value: `debug`
+ * `hostname` - hostname (syslog parameter), default value: `os.hostname()`
+ * `app` - application name (syslog parameter), default value: `path.basename(process.title)`
+ * `logger_level` - output event level, possible values are:
+   * `emerg`
+   * `alert`
+   * `critical`
+   * `error`
+   * `warning`
+   * `notice`
+   * `info`
+   * `debug`
+
+ > `logger_level` also can be set via environment variable `LOGGER_LEVEL`
+ 
+### Adapter configuration
+
+#### Console
+
+ * `enabled` - true/false, should console be silent or not, default is `true`
+ 
+#### Syslog
+
+ * `host` - valid fqdn or ip address of Syslog/Logstash daemon
+ * `port` - udp4 port number
+
 ### Standalone
 
 ```
 import Logger, {Syslog, Console} from 'dalee-logger';
+
+Logger.setParameters({ app: 'node' });
 
 Logger.addAdapter(Console, {});
 Logger.addAdapter(Syslog, {
@@ -146,3 +182,7 @@ output {
     }
 }
 ```
+
+## License
+
+Software licensed under the [MIT License](http://www.opensource.org/licenses/MIT).
