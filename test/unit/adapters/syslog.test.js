@@ -41,7 +41,7 @@ describe('Syslog', () => {
         );
 
         assert.equal(messages.length, 1);
-        assert.equal(messages[0], "<0>2016-12-01 23:23:23.4554 localhost app: syslog goes here");
+        assert.equal(messages[0], '<0>2016-12-01 23:23:23.4554 localhost app: syslog goes here');
     }));
 
     it('should correctly format syslog message (hostname only)', sinon.test(function () {
@@ -60,7 +60,7 @@ describe('Syslog', () => {
         );
 
         assert.equal(messages.length, 1);
-        assert.equal(messages[0], "<0>2016-12-01 23:23:23.4554 localhost syslog goes here");
+        assert.equal(messages[0], '<0>2016-12-01 23:23:23.4554 localhost syslog goes here');
     }));
 
     it('should correctly format syslog message (app only)', sinon.test(function () {
@@ -79,7 +79,7 @@ describe('Syslog', () => {
         );
 
         assert.equal(messages.length, 1);
-        assert.equal(messages[0], "<0>2016-12-01 23:23:23.4554 app: syslog goes here");
+        assert.equal(messages[0], '<0>2016-12-01 23:23:23.4554 app: syslog goes here');
     }));
 
     it('should correctly format syslog message (no hostname, no app)', sinon.test(function () {

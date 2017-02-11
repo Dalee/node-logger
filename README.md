@@ -6,17 +6,18 @@
 
 Great for Docker/Kubernetes environments.
 
- > Currently in production testing phase.
+> Currently in production testing phase.
+
 
 Key features:
 
- * Minimal configuration
- * Framework support integrated
-   * [hapi.js](https://hapijs.com/)
-   * [express.js](http://expressjs.com/)
+ * Minimal configuration required
+ * Bundled framework support:
+   * [hapi.js](https://hapijs.com/) `>= v15.2.0`
+   * [express.js](http://expressjs.com/) `>= v4.0.0`
+ * General `uncaughtException` and `unhandledRejection` handling (process will be terminated)
  * Console writer (enabled by default)
- * Syslog udp4 writer (Syslog/Logstash compatible)
- * `uncaughtException` and `unhandledRejection` handling (process will exit)
+ * Syslog [RFC3164](https://www.ietf.org/rfc/rfc3164.txt) udp4 writer
 
 ## Usage
 
@@ -26,8 +27,8 @@ Key features:
 
 Global configuration options:
 
- * `facility` - global facility, default value: `1` (`USER`) 
- * `severity` - default severity for events logged with `log` method, default value: `debug`
+ * `facility` - facility, default value: `1` (`USER`) (syslog parameter) 
+ * `severity` - severity for events logged with `log` method, default value: `debug`
  * `hostname` - hostname (syslog parameter), default value: `os.hostname()`
  * `app` - application name (syslog parameter), default value: `path.basename(process.title)`
  * `logger_level` - output event level, possible values are:
@@ -40,18 +41,31 @@ Global configuration options:
    * `info`
    * `debug`
 
- > `logger_level` also can be set via environment variable `LOGGER_LEVEL`
+
+> `logger_level` also can be set via environment variable `LOGGER_LEVEL`
  
 ### Adapter configuration
 
 #### Console
 
  * `enabled` - true/false, should console be silent or not, default is `true`
+
+
+Sample output:
+```
+[2016-11-26 13:52:45.2342] debug: Hello world
+```
  
 #### Syslog
 
  * `host` - valid fqdn or ip address of Syslog/Logstash daemon
  * `port` - udp4 port number
+
+
+Sample output (udp4 packet):
+```
+<0>2016-11-26 23:23:23.4554 localhost app: hello world
+```
 
 ### Standalone
 
@@ -71,9 +85,8 @@ Logger.debug('Will write to console and send UDP syslog packet');
 
 ### hapi.js
 
-Version supported: `^15.2.0`
+Register as plugin in `manifest.js`:
 
-Just register plugin in `manifest.js` as:
 ```
 plugin: {
   register: 'dalee-logger',
@@ -93,7 +106,7 @@ plugin: {
 
 ### express.js
 
-Version supported: `^4.0.0`
+Register as express middleware:
 
 ```
 import express from 'express';
@@ -126,15 +139,16 @@ app.listen(80, () => {
 });
 ```
 
-## Logstash configuration
+## Sample Logstash configuration
 
-Sample filter for Logstash:
+> Check out our [ELK-playground](https://github.com/Dalee/elk-playground) project
 
- * logstash will listen on port `5000` for udp packets
- * successfully parsed message will go into index named `logstash-{syslog_program}`
- * every unparsed line will go to index named `logstash-error`
- * logstash will write to Elastic on `localhost:9200`
- * Check out [ELK-playground](https://github.com/Dalee/elk-playground) to test with
+
+ * Logstash will listen on port `5000` for udp packets
+ * Successfully parsed message will go into index named `logstash-{syslog_program}`
+ * Every unparsed line will go to index named `logstash-error`
+ * Logstash will write to Elastic on `localhost:9200`
+
 
 ```
 input {
