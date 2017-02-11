@@ -4,7 +4,7 @@ import util from 'util';
 import path from 'path';
 import validator from 'validator';
 
-import {FACILITY, SEVERITY, FACILITY_CODE, SEVERITY_CODE} from './constants';
+import {FACILITY, SEVERITY, SEVERITY_NAME, FACILITY_CODE, SEVERITY_CODE, SEVERITY_CODE2} from './constants';
 import Syslog from './adapter/syslog';
 import Console from './adapter/console';
 import {setupLogger as setupHapiLogger} from './plugin/hapi';
@@ -14,10 +14,11 @@ import setupExpress from './plugin/express';
 moment.locale('en');
 let _adapters = [];
 let _params = {
-    'facility': FACILITY_CODE.USER,
-    'severity': SEVERITY_CODE.DEBUG,
-    'hostname': os.hostname(),
-    'app': path.basename(process.title)
+    'facility': FACILITY_CODE.USER, // default facility for event
+    'severity': SEVERITY_CODE.DEBUG, // default level for event (if event severity is not specified)
+    'hostname': os.hostname(), // default hostname
+    'app': path.basename(process.title), // application name (elastic index name if parsed with logstash)
+    'logger_level': process.env.LOGGER_LEVEL || SEVERITY_NAME[SEVERITY_CODE.DEBUG] // default filtering level
 };
 
 /**
@@ -89,6 +90,15 @@ class Logger {
         } else {
             _params.app = params.app;
         }
+
+        // validate and set logger_level (if passed)
+        params.logger_level = params.logger_level || _params.logger_level;
+        params.logger_level = params.logger_level.toLowerCase();
+        if (!SEVERITY_CODE2.hasOwnProperty(params.logger_level)) {
+            throw new Error(`Incorrect logger level passed: ${params.logger_level}`);
+        }
+
+        _params.logger_level = params.logger_level;
     }
 
     /**
@@ -212,6 +222,10 @@ class Logger {
      * @private
      */
     static _log(severity, message) {
+        if (severity > SEVERITY_CODE2[_params.logger_level]) {
+            return;
+        }
+
         const facility = _params.facility;
         const hostname = _params.hostname;
         const application = _params.app;
@@ -235,6 +249,7 @@ exports.FACILITY = FACILITY;
 exports.FACILITY_CODE = FACILITY_CODE;
 exports.SEVERITY = SEVERITY;
 exports.SEVERITY_CODE = SEVERITY_CODE;
+exports.SEVERITY_NAME = SEVERITY_NAME;
 
 // hapi plugin
 exports.register = (server, options, next) => {
