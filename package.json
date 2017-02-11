@@ -49,10 +49,10 @@
     "babel-preset-es2016": "^6.22.0",
     "babel-preset-es2017": "^6.22.0",
     "chai": "^3.5.0",
-    "eslint": "^3.14.1",
+    "eslint": "^3.15.0",
     "eslint-config-dalee": "^0.1.6",
     "mocha": "^3.2.0",
-    "npm-check-updates": "^2.8.9",
+    "npm-check-updates": "^2.10.2",
     "sinon": "^1.17.7"
   },
   "babel": {

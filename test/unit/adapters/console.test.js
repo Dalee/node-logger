@@ -20,11 +20,11 @@ describe('Console', () => {
             'localhost',
             'logger',
             '2016-11-26 13:52:45.2342',
-            "Hello world"
+            'Hello world'
         );
 
         assert.equal(messages.length, 1);
-        assert.equal(messages[0], "[2016-11-26 13:52:45.2342] debug: Hello world");
+        assert.equal(messages[0], '[2016-11-26 13:52:45.2342] debug: Hello world');
     }));
 
     it('should be silent if disabled', sinon.test(function () {
