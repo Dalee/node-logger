@@ -67,7 +67,7 @@ export function setupLogger(Logger, server, options) {
     //
     server.ext({
         type: 'onPostStart',
-        method: () => hapiPlugin.onServerStart(server)
+        method: (server, next) => hapiPlugin.onServerStart(server, next)
     });
 }
 
@@ -89,9 +89,11 @@ export class HapiPlugin {
     /**
      *
      * @param {Server} server
+     * @param next
      */
-    onServerStart(server) {
+    onServerStart(server, next) {
         this._logger.info('server started:', server.info.uri);
+        return next();
     }
 
     /**
