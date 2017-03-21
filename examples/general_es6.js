@@ -1,11 +1,9 @@
 /**
- * Example code:
- *
- * In order to run this code with regular node:
- * * `make build`
- * * `node ./examples/general.js`
+ * Example code
+ * run with Babel6 wrapper:
+ * * `./node_modules/.bin/babel-node ./examples/general.js`
  */
-const Logger = require('../dist/index');
+import Logger from './../src/index';
 
 // defined some constants
 const SYSLOG_HOST = process.env.SYSLOG_HOST;

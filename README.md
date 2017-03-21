@@ -8,7 +8,6 @@ Great for Docker/Kubernetes environments.
 
 > Currently in production testing phase.
 
-
 Key features:
 
  * Minimal configuration required
@@ -70,12 +69,12 @@ Sample output (udp4 packet):
 ### Standalone
 
 ```
-import Logger, {Syslog, Console} from 'dalee-logger';
+import Logger from 'dalee-logger';
 
 Logger.setParameters({ app: 'node' });
 
-Logger.addAdapter(Console, {});
-Logger.addAdapter(Syslog, {
+Logger.addAdapter(Logger.Console, {});
+Logger.addAdapter(Logger.Syslog, {
     'host': 'example.com',
     'port': 514
 });
