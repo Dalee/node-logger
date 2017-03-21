@@ -5,7 +5,7 @@ test:
 	$(NODE) ./node_modules/.bin/eslint src/ tests/
 	$(NODE) ./node_modules/.bin/mocha
 
-test-coverage:
+coverage:
 	$(NODE) ./node_modules/.bin/eslint src/ tests/
 	$(NODE) ./node_modules/.bin/babel-node \
 		./node_modules/.bin/babel-istanbul cover --report=clover --report=lcov \
@@ -14,4 +14,4 @@ test-coverage:
 build:
 	$(NODE) ./node_modules/.bin/babel -d ./dist/ ./src
 
-.PHONY: test test-coverage build
+.PHONY: test coverage build
