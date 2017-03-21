@@ -1,6 +1,6 @@
 {
   "name": "dalee-logger",
-  "version": "0.0.7",
+  "version": "0.2.0",
   "dependencies": {
     "babel-runtime": {
       "version": "6.23.0",
