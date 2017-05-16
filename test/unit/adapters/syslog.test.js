@@ -118,4 +118,27 @@ describe('Syslog', () => {
 
         assert.equal(messages.length, 0);
     }));
+
+    it('should correctly calculate message length in bytes', sinon.test(function () {
+        const messages = [];
+        this.stub(syslog, "_sender", {
+            send: (output, offset, length, port, host) => {
+                messages.push([output, offset, length]);
+            }
+        });
+
+        syslog.write(
+            FACILITY_CODE.KERNEL,
+            SEVERITY_CODE.EMERGENCY,
+            '',
+            '',
+            '2016-12-01 23:23:23.4554',
+            'ༀ ༁ ༂ ༃ ༄ ༅ ༆ ༇'
+        );
+
+        assert.equal(messages.length, 1);
+        assert.equal(messages[0][0], "<0>2016-12-01 23:23:23.4554 ༀ ༁ ༂ ༃ ༄ ༅ ༆ ༇");
+        assert.equal(messages[0][1], 0);
+        assert.equal(messages[0][2], 59);
+    }));
 });

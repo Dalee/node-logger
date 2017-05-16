@@ -99,6 +99,7 @@ export default class Syslog {
      * @private
      */
     _write(output) {
-        this._sender.send(output, 0, output.length, this._port, this._host);
+        const msg = new Buffer.from(output, 'utf8'); // we need calculate size in bytes
+        this._sender.send(output, 0, msg.length, this._port, this._host);
     }
 };
