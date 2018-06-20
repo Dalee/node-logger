@@ -1,11 +1,11 @@
 import moment from 'moment';
 
-import {FACILITY, SEVERITY, SEVERITY_NAME, FACILITY_CODE, SEVERITY_CODE} from './constants';
+import { FACILITY, SEVERITY, SEVERITY_NAME, FACILITY_CODE, SEVERITY_CODE } from './constants';
 import LoggerImpl from './logger';
 import Syslog from './adapter/syslog';
 import Console from './adapter/console';
 import Memory from './adapter/memory';
-import {setupLogger as setupHapiLogger} from './plugin/hapi';
+import { setupLogger as setupHapiLogger } from './plugin/hapi';
 import setupExpress from './plugin/express';
 
 /**
@@ -158,12 +158,16 @@ exports.SEVERITY_CODE = SEVERITY_CODE;
 exports.SEVERITY_NAME = SEVERITY_NAME;
 
 // Hapi.js plugin registration
-exports.register = (server, options, next) => {
+exports.register = async (server, options) => {
     const hapiLogger = new LoggerImpl();
     gLoggerInstances.push(hapiLogger);
 
     setupHapiLogger(hapiLogger, server, options);
-    next();
+};
+
+exports.plugin = {
+    pkg: require('../package.json'),
+    register: exports.register
 };
 
 // Hapi plugin metadata

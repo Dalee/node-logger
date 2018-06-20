@@ -1,4 +1,4 @@
-import {SEVERITY_NAME} from './constants';
+import { SEVERITY_NAME } from './constants';
 import _ from 'lodash';
 import util from 'util';
 
@@ -14,7 +14,7 @@ const severityMethods = Object.values(SEVERITY_NAME);
 export function processLogData(data, tags) {
     const severity = severityFromTags('debug', tags);
     const message = formatMessage(severity, data, tags);
-    return {severity, message};
+    return { severity, message };
 }
 
 /**

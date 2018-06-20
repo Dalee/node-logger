@@ -1,5 +1,5 @@
 import util from 'util';
-import {SEVERITY_NAME} from '../constants';
+import { SEVERITY_NAME } from '../constants';
 
 /**
  * Console adapter
@@ -13,7 +13,7 @@ export default class Console {
      * @constructor
      */
     constructor(options) {
-        this._options = options || {enabled: true};
+        this._options = options || { enabled: true };
         if (!this._options.hasOwnProperty('enabled')) {
             this._options.enabled = true;
         }
