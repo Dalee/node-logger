@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {HapiPlugin} from '../../../src/plugin/hapi';
+import { HapiPlugin } from '../../../src/plugin/hapi-17';
 
 // small hacky way to mock Logger
 function getPluginInstance() {
@@ -9,7 +9,7 @@ function getPluginInstance() {
             this.messageList.push(args);
         },
         'emerg': function (...args) {
-            this.loggerFunc(...args)
+            this.loggerFunc(...args);
         },
         'alert': function (...args) {
             this.loggerFunc(...args);
@@ -41,11 +41,11 @@ function getPluginInstance() {
 }
 
 
-describe('HapiPlugin', () => {
+describe('Hapi-17Plugin', () => {
 
     it('onServerStart', done => {
         const hapiPlugin = getPluginInstance();
-        hapiPlugin.onServerStart({info: {uri: 'http://server:3000'}}, done);
+        hapiPlugin.onServerStart({ info: { uri: 'http://server:3000' } }).then(done);
 
         assert.equal(hapiPlugin._logger.messageList.length, 1);
         assert.deepEqual(hapiPlugin._logger.messageList[0], ['server started:', 'http://server:3000']);
@@ -53,7 +53,7 @@ describe('HapiPlugin', () => {
 
     it('onServerLog', () => {
         const hapiPlugin = getPluginInstance();
-        hapiPlugin.onServerLog({}, {data: 'hello'}, ['error', 'database-error']);
+        hapiPlugin.onServerLog({}, { data: 'hello' }, ['error', 'database-error']);
 
         assert.equal(hapiPlugin._logger.messageList.length, 1);
         assert.deepEqual(hapiPlugin._logger.messageList[0], ['[database-error] hello']);
@@ -61,7 +61,7 @@ describe('HapiPlugin', () => {
 
     it('onRequestLog', () => {
         const hapiPlugin = getPluginInstance();
-        hapiPlugin.onRequestLog({}, {data: 'hello'}, ['error', 'database-error']);
+        hapiPlugin.onRequestLog({}, { data: 'hello' }, ['error', 'database-error']);
 
         assert.equal(hapiPlugin._logger.messageList.length, 1);
         assert.deepEqual(hapiPlugin._logger.messageList[0], ['[database-error] hello']);
@@ -80,10 +80,10 @@ describe('HapiPlugin', () => {
 
         hapiPlugin.onRequestInternal({
             method: 'get',
-            headers: {'x-forwarded-proto': 'https'},
-            info: {host: 'localhost'},
-            url: {path: '/hello/world'}
-        }, {}, {received: true});
+            headers: { 'x-forwarded-proto': 'https' },
+            info: { host: 'localhost' },
+            url: { path: '/hello/world' }
+        }, {}, { received: true });
 
         assert.equal(hapiPlugin._logger.messageList.length, 1);
         assert.deepEqual(hapiPlugin._logger.messageList[0], ['GET', 'https://localhost/hello/world']);

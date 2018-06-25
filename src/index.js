@@ -6,6 +6,7 @@ import Syslog from './adapter/syslog';
 import Console from './adapter/console';
 import Memory from './adapter/memory';
 import { setupLogger as setupHapiLogger } from './plugin/hapi';
+import { setupLogger as setupHapi17Logger } from  './plugin/hapi-17';
 import setupExpress from './plugin/express';
 
 /**
@@ -158,16 +159,23 @@ exports.SEVERITY_CODE = SEVERITY_CODE;
 exports.SEVERITY_NAME = SEVERITY_NAME;
 
 // Hapi.js plugin registration
-exports.register = async (server, options) => {
+exports.register = (server, options, next) => {
     const hapiLogger = new LoggerImpl();
     gLoggerInstances.push(hapiLogger);
 
     setupHapiLogger(hapiLogger, server, options);
+    next();
 };
 
+// Hapi 17+ plugin
 exports.plugin = {
     pkg: require('../package.json'),
-    register: exports.register
+    register: async (server, options) => {
+        const hapiLogger = new LoggerImpl();
+        pLoggerInstances.push(hapiLogger);
+
+        setupHapi17Logger(hapiLogger, server, options);
+    }
 };
 
 // Hapi plugin metadata

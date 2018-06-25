@@ -32,7 +32,7 @@ export function setupLogger(Logger, server, options) {
     //  - `server.log('error', data);`
     //  - `server.log(['error', 'database'], data);`
     //
-    server.on('log', (...args) => {
+    server.events.on('log', (...args) => {
         hapiPlugin.onServerLog(server, ...args);
     });
 
@@ -42,14 +42,14 @@ export function setupLogger(Logger, server, options) {
     //  - `request.log('error', data);`
     //  - `request.log(['error', 'database'], data);`
     //
-    server.on('request', (...args) => {
+    server.events.on('request', (...args) => {
         hapiPlugin.onRequestLog(...args);
     });
 
     //
     // error during route handler processing
     //
-    server.on('request-error', (...args) => {
+    server.events.on({ name: 'request', channels: 'error' }, (...args) => {
         hapiPlugin.onRequestError(...args);
     });
 
@@ -58,7 +58,7 @@ export function setupLogger(Logger, server, options) {
     // currently we only interested in received sub-event
     // to render request before any processing will start
     //
-    server.on('request-internal', (...args) => {
+    server.events.on({ name: 'request', channels: 'internal' }, (...args) => {
         hapiPlugin.onRequestInternal(...args);
     });
 
@@ -67,7 +67,7 @@ export function setupLogger(Logger, server, options) {
     //
     server.ext({
         type: 'onPostStart',
-        method: (server, next) => hapiPlugin.onServerStart(server, next)
+        method: (server) => hapiPlugin.onServerStart(server)
     });
 }
 
@@ -89,11 +89,9 @@ export class HapiPlugin {
     /**
      *
      * @param {Server} server
-     * @param next
      */
-    onServerStart(server, next) {
+    async onServerStart(server) {
         this._logger.info('server started:', server.info.uri);
-        return next();
     }
 
     /**
@@ -103,7 +101,8 @@ export class HapiPlugin {
      * @param {Array} tags
      */
     onServerLog(server, event, tags) {
-        const { severity, message } = processLogData(event.data, tags);
+        const data = event.error || event.data;
+        const { severity, message } = processLogData(data, tags);
         this._logger[severity](message);
     }
 
@@ -114,7 +113,8 @@ export class HapiPlugin {
      * @param {Array} tags
      */
     onRequestLog(request, event, tags) {
-        const { severity, message } = processLogData(event.data, tags);
+        const data = event.error || event.data;
+        const { severity, message } = processLogData(data, tags);
         this._logger[severity](message);
     }
 
