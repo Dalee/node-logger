@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { HapiPlugin } from '../../../src/plugin/hapi';
+import HapiPlugin from '../../../src/plugin/hapi-plugin';
 
 // small hacky way to mock Logger
 function getPluginInstance() {
@@ -46,6 +46,14 @@ describe('HapiPlugin', () => {
     it('onServerStart', done => {
         const hapiPlugin = getPluginInstance();
         hapiPlugin.onServerStart({ version: '16.0.0', info: { uri: 'http://server:3000' } }, done);
+
+        assert.equal(hapiPlugin._logger.messageList.length, 1);
+        assert.deepEqual(hapiPlugin._logger.messageList[0], ['server started:', 'http://server:3000']);
+    });
+
+    it('onServerStart-hapi17', done => {
+        const hapiPlugin = getPluginInstance();
+        hapiPlugin.onServerStart({ version: '17.0.0', info: { uri: 'http://server:3000' } }).then(done);
 
         assert.equal(hapiPlugin._logger.messageList.length, 1);
         assert.deepEqual(hapiPlugin._logger.messageList[0], ['server started:', 'http://server:3000']);

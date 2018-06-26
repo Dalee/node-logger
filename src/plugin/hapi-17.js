@@ -1,6 +1,6 @@
 import Syslog from '../adapter/syslog';
 import Console from '../adapter/console';
-import { HapiPlugin } from './hapi.js';
+import HapiPlugin from './hapi-plugin.js';
 
 /**
  *
