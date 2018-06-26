@@ -2,4 +2,4 @@
 
 var _index = require("./dist/index.js");
 
-module.exports = _index.plugin;
+module.exports = _index.hapi17;

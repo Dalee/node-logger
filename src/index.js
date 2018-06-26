@@ -173,7 +173,7 @@ exports.register = async (server, options, next) => {
     setupHapi17Logger(hapiLogger, server, options);
 };
 
-exports.plugin = {
+exports.hapi17 = {
     register: exports.register,
     pkg
 };

@@ -91,9 +91,12 @@ export class HapiPlugin {
      * @param {Server} server
      * @param next
      */
-    onServerStart(server, next) {
+    async onServerStart(server, next) {
         this._logger.info('server started:', server.info.uri);
-        return next();
+
+        if (server.version < '17.0.0') {
+            return next();
+        }
     }
 
     /**
@@ -103,7 +106,8 @@ export class HapiPlugin {
      * @param {Array} tags
      */
     onServerLog(server, event, tags) {
-        const { severity, message } = processLogData(event.data, tags);
+        const data = event.error || event.data;
+        const { severity, message } = processLogData(data, tags);
         this._logger[severity](message);
     }
 
@@ -114,7 +118,8 @@ export class HapiPlugin {
      * @param {Array} tags
      */
     onRequestLog(request, event, tags) {
-        const { severity, message } = processLogData(event.data, tags);
+        const data = event.error || event.data;
+        const { severity, message } = processLogData(data, tags);
         this._logger[severity](message);
     }
 
@@ -142,6 +147,5 @@ export class HapiPlugin {
             this._logger.debug(method, url);
         }
     }
-
 
 }

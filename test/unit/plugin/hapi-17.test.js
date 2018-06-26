@@ -45,7 +45,7 @@ describe('Hapi-17Plugin', () => {
 
     it('onServerStart', done => {
         const hapiPlugin = getPluginInstance();
-        hapiPlugin.onServerStart({ info: { uri: 'http://server:3000' } }).then(done);
+        hapiPlugin.onServerStart({ version: '17.0.0', info: { uri: 'http://server:3000' } }).then(done);
 
         assert.equal(hapiPlugin._logger.messageList.length, 1);
         assert.deepEqual(hapiPlugin._logger.messageList[0], ['server started:', 'http://server:3000']);
