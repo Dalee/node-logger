@@ -84,6 +84,29 @@ Logger.debug('Will write to console and send UDP syslog packet');
 
 ### hapi.js
 
+#### hapi `>= 17.0.0`
+
+Register as plugin in `manifest.js`:
+
+```
+plugin: {
+  plugin: 'dalee-logger/hapi-17',
+  options: {
+    app: 'node-daemon',
+    hostname: 'example.com',
+    console: {
+      enabled: true
+    },
+    syslog: {
+      host: 'example.com',
+      port: 514
+    }
+  }
+}
+```
+
+#### hapi `>= 15.2.0` `< 17.0.0`
+
 Register as plugin in `manifest.js`:
 
 ```

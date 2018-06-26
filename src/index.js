@@ -139,6 +139,8 @@ const unhandledException = err => {
     }, 2000);
 };
 
+const pkg = require('../package.json');
+
 // default registrations
 // register default logger
 moment.locale('en');
@@ -159,29 +161,25 @@ exports.SEVERITY_CODE = SEVERITY_CODE;
 exports.SEVERITY_NAME = SEVERITY_NAME;
 
 // Hapi.js plugin registration
-exports.register = (server, options, next) => {
+exports.register = async (server, options, next) => {
     const hapiLogger = new LoggerImpl();
     gLoggerInstances.push(hapiLogger);
 
-    setupHapiLogger(hapiLogger, server, options);
-    next();
+    if (server.version < '17.0.0') {
+        setupHapiLogger(hapiLogger, server, options);
+        return next();
+    }
+
+    setupHapi17Logger(hapiLogger, server, options);
 };
 
-// Hapi 17+ plugin
 exports.plugin = {
-    pkg: require('../package.json'),
-    register: async (server, options) => {
-        const hapiLogger = new LoggerImpl();
-        pLoggerInstances.push(hapiLogger);
-
-        setupHapi17Logger(hapiLogger, server, options);
-    }
+    register: exports.register,
+    pkg
 };
 
 // Hapi plugin metadata
-exports.register.attributes = {
-    pkg: require('../package.json')
-};
+exports.register.attributes = { pkg };
 
 // Express.js plugin registration
 exports.express = (options) => {
