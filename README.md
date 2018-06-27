@@ -26,7 +26,7 @@ Key features:
 
 Global configuration options:
 
- * `facility` - facility, default value: `1` (`USER`) (syslog parameter) 
+ * `facility` - facility, default value: `1` (`USER`) (syslog parameter)
  * `severity` - severity for events logged with `log` method, default value: `debug`
  * `hostname` - hostname (syslog parameter), default value: `os.hostname()`
  * `app` - application name (syslog parameter), default value: `path.basename(process.title)`
@@ -42,7 +42,7 @@ Global configuration options:
 
 
 > `logger_level` also can be set via environment variable `LOGGER_LEVEL`
- 
+
 ### Adapter configuration
 
 #### Console
@@ -54,7 +54,7 @@ Sample output:
 ```
 [2016-11-26 13:52:45.2342] debug: Hello world
 ```
- 
+
 #### Syslog
 
  * `host` - valid fqdn or ip address of Syslog/Logstash daemon
@@ -111,7 +111,7 @@ Register as plugin in `manifest.js`:
 
 ```
 plugin: {
-  register: 'dalee-logger',
+  register: 'dalee-logger/hapi',
   options: {
     app: 'node-daemon',
     hostname: 'example.com',
@@ -132,7 +132,7 @@ Register as express middleware:
 
 ```
 import express from 'express';
-import {express as expressLogger} from 'dalee-logger';
+import expressLogger from 'dalee-logger/express';
 
 const app = express();
 const logger = expressLogger({
