@@ -4,7 +4,7 @@ import util from 'util';
 import path from 'path';
 import validator from 'validator';
 
-import {FACILITY, SEVERITY, SEVERITY_NAME, FACILITY_CODE, SEVERITY_CODE, SEVERITY_CODE2} from './constants';
+import { FACILITY, SEVERITY, SEVERITY_NAME, FACILITY_CODE, SEVERITY_CODE, SEVERITY_CODE2 } from './constants';
 
 /**
  * Logger class, singleton

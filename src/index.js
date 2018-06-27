@@ -1,11 +1,12 @@
 import moment from 'moment';
 
-import {FACILITY, SEVERITY, SEVERITY_NAME, FACILITY_CODE, SEVERITY_CODE} from './constants';
+import { FACILITY, SEVERITY, SEVERITY_NAME, FACILITY_CODE, SEVERITY_CODE } from './constants';
 import LoggerImpl from './logger';
 import Syslog from './adapter/syslog';
 import Console from './adapter/console';
 import Memory from './adapter/memory';
-import {setupLogger as setupHapiLogger} from './plugin/hapi';
+import { setupLogger as setupHapiLogger } from './plugin/hapi';
+import { setupLogger as setupHapi17Logger } from  './plugin/hapi-17';
 import setupExpress from './plugin/express';
 
 /**
@@ -138,6 +139,8 @@ const unhandledException = err => {
     }, 2000);
 };
 
+const pkg = require('../package.json');
+
 // default registrations
 // register default logger
 moment.locale('en');
@@ -158,18 +161,25 @@ exports.SEVERITY_CODE = SEVERITY_CODE;
 exports.SEVERITY_NAME = SEVERITY_NAME;
 
 // Hapi.js plugin registration
-exports.register = (server, options, next) => {
+exports.register = async (server, options, next) => {
     const hapiLogger = new LoggerImpl();
     gLoggerInstances.push(hapiLogger);
 
-    setupHapiLogger(hapiLogger, server, options);
-    next();
+    if (server.version < '17.0.0') {
+        setupHapiLogger(hapiLogger, server, options);
+        return next();
+    }
+
+    setupHapi17Logger(hapiLogger, server, options);
+};
+
+exports.hapi17 = {
+    register: exports.register,
+    pkg
 };
 
 // Hapi plugin metadata
-exports.register.attributes = {
-    pkg: require('../package.json')
-};
+exports.register.attributes = { pkg };
 
 // Express.js plugin registration
 exports.express = (options) => {

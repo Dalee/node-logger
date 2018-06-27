@@ -1,4 +1,4 @@
-import {processLogData} from '../helpers';
+import { processLogData } from '../helpers';
 import Syslog from '../adapter/syslog';
 import Console from '../adapter/console';
 
@@ -36,7 +36,7 @@ export class ExpressLogger {
         if (typeof tags === 'string') {
             tags = [tags];
         }
-        const {severity, message} = processLogData(data, tags);
+        const { severity, message } = processLogData(data, tags);
         this._logger[severity](message);
     }
 
