@@ -19,7 +19,10 @@
     "express-logger"
   ],
   "files": [
-    "dist"
+    "dist",
+    "express.js",
+    "hapi.js",
+    "hapi-17.js"
   ],
   "repository": {
     "type": "git",
